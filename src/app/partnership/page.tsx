@@ -14,7 +14,15 @@ async function getData(): Promise<Partnership[]> {
 }
 
 const DemoPage = () => {
-  const { getPartnershipList, partnershipList } = usePartnership();
+  const { getPartnershipList, partnershipList, insertPartnershipData } = usePartnership();
+
+  const handleInsertPartnership = async (data: Partial<Partnership>) => {
+    await insertPartnershipData(data)
+    .then(() => {
+      setIsModalOpen(false);
+      getPartnershipList();
+    })
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,9 +30,11 @@ const DemoPage = () => {
     getPartnershipList();
   }, []);
 
+  console.log(partnershipList);
+
   return (
     <>
-      <PartnershipModal open={isModalOpen} onChange={setIsModalOpen} />    
+      <PartnershipModal open={isModalOpen} onChange={setIsModalOpen} onClickSave={handleInsertPartnership} />    
       <div className="container">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Partnerships</h1>
