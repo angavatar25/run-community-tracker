@@ -1,12 +1,18 @@
 import { createClient } from "@/lib/supabase/client"
 import { useState } from "react";
 import { Partnership } from "@/types/partnership";
+import { generateResponse } from "@/helper/gemini";
 
 const usePartnership = () => {
   const supabase = createClient();
 
   const [partnershipList, setPartnershipList] = useState<Partnership[]>([]);
   const [partnershipDetail, setPartnershipDetail] = useState<Partnership | null>(null);
+
+  const [geminiResponse, setGeminiResponse] = useState<string | null>(null);
+
+  const [loadSuggestions, setLoadSuggestions] = useState<boolean>(false);
+
   const getPartnershipList = async () => {
     const { data, error } = await supabase.from("partnership").select("*");
     
@@ -22,11 +28,27 @@ const usePartnership = () => {
       status: item.status,
     }));
 
-    console.log(remapped);
-
     setPartnershipList(remapped);
 
     return remapped;
+  };
+
+  const getSuggestionsRes = async (payload) => {
+    setLoadSuggestions(true);
+
+    await generateResponse(partnershipList, payload)
+    .then(res => {
+
+      // const text =
+      //   res.candidates?.[0]?.content?.parts
+      //     ?.map((part: { text?: string }) => part.text ?? "")
+      //     .join("") ?? "";
+  
+      setGeminiResponse(res.text);
+    })
+    .finally(() => {
+      setLoadSuggestions(false);
+    });
   };
 
   const getPartershipDetail = async (id: string) => {
@@ -72,6 +94,9 @@ const usePartnership = () => {
     getPartershipDetail,
     partnershipDetail,
     insertPartnershipData,
+    getSuggestionsRes,
+    geminiResponse,
+    loadSuggestions,
   };
 };
 
