@@ -1,8 +1,13 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import usePartnership from "@/hooks/usePartnership";
+import { useEffect } from "react";
+import { useParams } from "next/navigation";
 
 const ContactChannel = [
   { value: "email", label: "Email" },
@@ -19,6 +24,18 @@ const PartnershipStatus = [
 ];
 
 const PartnershipDetailView = () => {
+  const { id } = useParams<{ id: string }>()
+
+  const { partnershipDetail, getPartershipDetail } = usePartnership();
+
+  useEffect(() => {
+    getPartershipDetail(id)
+  }, [id]);
+
+  if (!partnershipDetail) return null;
+
+  console.log(partnershipDetail);
+
   return (
     <div>
       <form>
@@ -38,6 +55,7 @@ const PartnershipDetailView = () => {
                   placeholder="Evil Rabbit"
                   required
                   readOnly
+                  value={partnershipDetail.brandName}
                 />
               </Field>
               <Field>
@@ -67,13 +85,14 @@ const PartnershipDetailView = () => {
                   id="collaboration-type"
                   placeholder="Enter your collaboration type"
                   readOnly
+                  value={partnershipDetail.collaborationType}
                 />
               </Field>
               <Field>
                 <FieldLabel htmlFor="partnership-status">
                   Status
                 </FieldLabel>
-                <Select readOnly defaultValue="new">
+                <Select readOnly defaultValue={partnershipDetail.status}>
                   <SelectTrigger id="partnership-status">
                     <SelectValue />
                   </SelectTrigger>
@@ -96,6 +115,7 @@ const PartnershipDetailView = () => {
                   id="owner-name"
                   placeholder="Enter owner name"
                   readOnly
+                  value={partnershipDetail.contactName}
                 />
               </Field>
               <FieldSet>
@@ -108,6 +128,7 @@ const PartnershipDetailView = () => {
                   placeholder="Add any internal-notes"
                   className="resize-none"
                   readOnly={true}
+                  value={partnershipDetail.notes}
                 />
               </Field>
               <Field>
@@ -119,13 +140,14 @@ const PartnershipDetailView = () => {
                   placeholder="Add any message (optional)"
                   className="resize-none"
                   readOnly
+                  value={partnershipDetail.messages}
                 />
               </Field>
             </FieldSet>
             </FieldGroup>
           </FieldSet>
           <Field orientation="horizontal">
-            <Button variant="outline" type="button">
+            <Button onClick={() => window.history.back()} variant="outline" type="button">
               Back
             </Button>
           </Field>

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/sidebar"
+import { Suspense } from "react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <SidebarProvider>
-          <AppSidebar />
+          <Suspense fallback={<div>Loading...</div>}>
+            <AppSidebar />
+          </Suspense>
           <main className="flex-1">
             <div className="flex items-center border-b p-2">
               <SidebarTrigger />

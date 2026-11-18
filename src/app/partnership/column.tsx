@@ -32,21 +32,29 @@ export function useFillingColumns() {
           id: "action",
           header: () => <div className="text-center">Action</div>,
           cell: ({ row }) => {
-            const id = row.original.id
+            const id = row.original.id;
+
+            const redirectToView = () => {
+              router.push(`/partnership-detail/view/${id}`);
+            };
+
+            const redirectToEdit = () => {
+              router.push(`/partnership-detail/edit/${id}`);
+            };
 
             return (
               <div className="text-center">
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => router.push(`/partnership-detail/view`)}
+                  onClick={redirectToView}
                 >
                   View
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => router.push(`/partnership-detail`)}
+                  onClick={redirectToEdit}
                 >
                   Edit
                 </Button>
