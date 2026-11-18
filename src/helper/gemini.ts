@@ -3,7 +3,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({
-  apiKey: 'AQ.Ab8RN6KkUEh5Y6nawyOE03MyRyU3vbk9q9hIF2x5zDK642vj1Q',
+  apiKey: process.env.GEMINI_API_KEY,
 });
 
 const sleep = (ms: number) =>
